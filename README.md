@@ -9,3 +9,6 @@ Learn more about the recommended Project Setup and IDE Support in the [Vue Docs 
 - index.html                在最外层，在开发阶段，作为 vite 的入口
 - vite.config.ts            vite 的配置文件
 - package.json              打包运行配置
+- .eslintrc.json            eslint 的配置文件，作用是进行代码格式检查
+- .prettierrc               prettier 的配置文件，作用是代码格式化
+- tsconfig.json             将 ts 文件编译成 js 文件的配置
