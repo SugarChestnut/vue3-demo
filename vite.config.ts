@@ -4,13 +4,6 @@ import type { UserConfig, ConfigEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
-const OUT_PUT_DIR: string = 'dist';
-/**
- * __dirname 当前模块路径，等效 path.dirname()，指向 js 文件的绝对路径
- * ./ 表示 node 命令执行时所在目录的相对路径
- */
-const pathSrc: string = path.resolve(__dirname, './src');
-
 /**
  * https://vite.dev/config/
  *
@@ -26,7 +19,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
      * 默认 mode = development，通过 --mode 参数修改
      * mode = dev，则会加载 .env.dev 文件的配置
      */
-    const env: Record<string, string> = loadEnv(mode, process.cwd());
+    const env = loadEnv(mode, process.cwd());
     return defineConfig({
         root: process.cwd(), // 项目根路径，默认就是根目录，不需要设置
         base: '/demo', // 公共 uri
@@ -34,9 +27,12 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         plugins: [vue() /*splitVendorChunkPlugin()*/],
         resolve: {
             extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
-            // 路径别名
+            /**
+             * __dirname 当前模块路径，等效 path.dirname()，指向 js 文件的绝对路径
+             * ./ 表示 node 命令执行时所在目录的相对路径
+             */
             alias: {
-                '@': pathSrc,
+                '@': path.resolve(__dirname, './src'),
                 'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
             },
             preserveSymlinks: true,
@@ -65,7 +61,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         },
         build: {
             // target: "",  // 编译目标，不同版本的语法不同，可以自定义目标
-            outDir: OUT_PUT_DIR,
+            outDir: 'dist',
             // 生成源码地图
             sourcemap: false,
             manifest: false,
