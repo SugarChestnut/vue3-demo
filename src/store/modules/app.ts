@@ -1,21 +1,30 @@
 import { defineStore } from "pinia";
-
-/*global Nullable*/
+import { store } from "@/store";
+import { Themes } from "@/constants/data";
+// 接口定义
 interface AppState {
-    durationRow: Recordable;
-    utc: string;
-    utcHour: number;
-    utcMin: number;
-    eventStack: (() => unknown)[];
-    timer: Nullable<TimeoutHandle>;
-    autoRefresh: boolean;
-    version: string;
-    isMobile: boolean;
-    reloadTimer: Nullable<IntervalHandle>;
-    allMenus: MenuOptions[];
+    title: string,
     theme: string;
 }
 
+// 定义一个存储对象实例
 export const appStore = defineStore({
-    id: "app"
-})
+    id: "app",
+    // 函数，返回一个 AppState 对象
+    state: (): AppState => ({
+        title: 'vue3 demo',
+        theme: Themes.Light
+    }),
+    getters: {
+        title(): string {
+            return this.title;
+        }
+    },
+    actions: {
+
+    },
+});
+
+export function useAppStoreWithOut(): Recordable {
+    return appStore(store);
+}
