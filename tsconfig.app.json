@@ -12,6 +12,7 @@
         "allowImportingTsExtensions": true,
         "isolatedModules": true,
         "moduleDetection": "force",
+        "noEmitOnError": false,
         "noEmit": true,
         "jsx": "preserve",
 
@@ -21,6 +22,8 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
+        "noImplicitAny": false,
+        "strictNullChecks": true,  // undefiend 和 null 不能赋值给其他类型
 
         "baseUrl": ".",
         "paths": {
@@ -29,5 +32,5 @@
         "types": ["node", "vite/client"]
     },
     "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "env.d.ts"],
-    "exclude": ["node_modules", "dist"]
+    "exclude": ["node_modules", "dist", "test"]
 }
