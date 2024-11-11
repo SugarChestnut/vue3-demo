@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 import type { UserConfig, ConfigEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
+import { tr } from 'element-plus/es/locales.mjs';
 
 /**
  * https://vite.dev/config/
@@ -55,6 +56,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
                 [env.VITE_X_APP_BASE_API]: {
                     target: env.VITE_X_APP_BASE_URL, // 访问路径 /xxx，转发到 target，同时改变访问源，放置跨域问题
                     changeOrigin: true,
+                    ws: true,
                     rewrite: (path): string => path.replace(new RegExp('^' + '/xxx'), ''), // 对 uri 进行匹配替换
                 },
             },

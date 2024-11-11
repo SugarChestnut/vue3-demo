@@ -5,7 +5,7 @@
     "singleQuote": true,
     "arrowParens": "always",
     "printWidth": 120,
-    "vueIndentScriptAndStyle": true,
+    "vueIndentScriptAndStyle": false,
     "htmlWhitespaceSensitivity": "strict",
     "endOfLine": "auto"
 }
