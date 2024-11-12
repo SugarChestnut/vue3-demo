@@ -1,6 +1,3 @@
-<template> </template>
-
-<script setup lang="ts">
 // ref 引用空间
 import { ref, onUnmounted } from 'vue';
 
@@ -35,7 +32,3 @@ const initWs = function() {
     }
 };
 initWs();
-
-</script>
-
-<style lang="scss" scoped></style>

@@ -3,7 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 import type { UserConfig, ConfigEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
-import { tr } from 'element-plus/es/locales.mjs';
+import autoprefixer from 'autoprefixer';
 
 /**
  * https://vite.dev/config/
@@ -26,6 +26,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         base: '/demo', // 公共 uri
         publicDir: process.cwd() + 'public', // 默认就是根目录下 public 文件夹
         plugins: [vue() /*splitVendorChunkPlugin()*/],
+        envPrefix: "VITE_",     // 环境变量1以 VITE_ 开头，见 .env 文件
         resolve: {
             extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
             /**
@@ -38,40 +39,54 @@ export default ({ mode }: ConfigEnv): UserConfig => {
             },
             preserveSymlinks: true,
         },
+        // css 预处理配置
         css: {
+            modules: {
+                // 自定义csss属性名：name 表示文件名，local 表示类名
+                generateScopedName: '[name]_[local]_[hash:base64:5]',
+            },
             preprocessorOptions: {
                 //define global scss variable
                 scss: {
                     additionalData: `@use "@/styles/theme.scss" as *;`,
                 },
             },
+            postcss: {
+                plugins: [
+                    // 这个插件主要用来自动为不同的目标浏览器添加样式前缀，解决的是浏览器兼容性的问题。
+                    autoprefixer({
+                        // 指定目标浏览器
+                        overrideBrowserslist: ['Chrome > 40', 'ff > 31', 'ie 11'],
+                    }),
+                ],
+            },
         },
         // 服务配置
         server: {
             hmr: true,
             host: true, // 或者指定 IP，相当于 0.0.0.0
-            port: Number(env.VITE_X_APP_PORT),
+            port: Number(env.VITE_APP_PORT),
             open: false, // 启动打开浏览器
             proxy: {
-                [env.VITE_X_APP_BASE_API]: {
-                    target: env.VITE_X_APP_BASE_URL, // 访问路径 /xxx，转发到 target，同时改变访问源，放置跨域问题
+                [env.VITE_APP_BASE_API]: {
+                    target: env.VITE_APP_BASE_URL, // 访问路径 /xxx，转发到 target，同时改变访问源，放置跨域问题
                     changeOrigin: true,
                     ws: true,
                     rewrite: (path): string => path.replace(new RegExp('^' + '/xxx'), ''), // 对 uri 进行匹配替换
                 },
             },
         },
+        // 编译
         build: {
             // target: "",  // 编译目标，不同版本的语法不同，可以自定义目标
             outDir: 'dist',
-            // 生成源码地图
             sourcemap: false,
             manifest: false,
             chunkSizeWarningLimit: 2000, // 打包后单文件大小限制 kb
+            /**
+             * Rollup 是一个用于 JavaScript 的模块打包工具，它将小的代码片段编译成更大、更复杂的代码，例如库或应用程序
+             */
             rollupOptions: {
-                /**
-                 * Rollup 是一个用于 JavaScript 的模块打包工具，它将小的代码片段编译成更大、更复杂的代码，例如库或应用程序
-                 */
                 // input: {},
                 // plugins: [],
                 output: [
@@ -106,7 +121,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
                     drop_console: true,
                     drop_debugger: true,
                 },
-            },
+            }
         },
     });
 };
