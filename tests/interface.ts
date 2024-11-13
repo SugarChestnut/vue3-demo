@@ -1,36 +1,57 @@
+export {}
+
 /**
- * 接口表示带属性的普通对象
- * 
- * interface 和 type 的区别
+ * 表示带属性的普通对象
  */
-interface interObject<Id extends string, Num extends number> {
-    // $id: Id;
+interface interObject {
+    $id: string;
 
     // 只读属性
     readonly name: string;
 
-    age: Num,
+    age: number,
 
-    // 后面价格问号表示属性不一定存在
+    // 后面的问号表示属性不一定存在
     addr?: string;
 
-    // 索引签名，额外的属性
-    [propName: string]: any;
+    /**
+     * 对象属性索引(一般只有一个)，
+     * 属性名只能是 string、number、symbol 三种类型，
+     * 同时约束，所有属性名为 string（下面示例） 的，属性值必须为 any（下面示例）
+     * 
+     * interface A {
+     *      [prop: number]: string;
+     * }
+     * const obj: A = ["a", "b", "c"];  可以表示成数组
+     */
+    [prop: string]: any;
 }
 
-let obj: interObject<string, number> = {
+/**
+ * 表示函数类型，类似于函数的对象表示法
+ * 
+ * let f: {
+ *      (o: interObject): string;
+ * }
+ */
+interface interMethod {
+    // 签名，没有输入参数，返回一个字符串
+    (o: interObject): string;
+}
+
+/**
+ * 表示构造函数
+ */
+interface interConstructor {
+    new (message: string): Error
+}
+
+let obj: interObject = {
     id: "aa",
     name: "rtt",
     age: 30,
 }
 
-/**
- * 接口表示函数类型
- */
-interface interMethod {
-    // 签名，没有输入参数，返回一个字符串
-    (o: interObject<string, number>): string;
-}
 let m: interMethod = function () {
     return '接口表示函数类型';
 };
