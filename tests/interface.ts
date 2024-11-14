@@ -17,7 +17,7 @@ interface interObject {
     /**
      * 对象属性索引(一般只有一个)，
      * 属性名只能是 string、number、symbol 三种类型，
-     * 同时约束，所有属性名为 string（下面示例） 的，属性值必须为 any（下面示例）
+     * 同时约束，所有属性名为 string 类型（下面示例） 的，属性值为 any 类型（下面示例）
      * 
      * interface A {
      *      [prop: number]: string;
