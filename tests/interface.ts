@@ -11,7 +11,7 @@ interface interObject {
 
     age: number,
 
-    // 后面的问号表示属性不一定存在
+    // 后面的问号表示属性不一定存在，在对象创建的时候，可以不设置改属性 
     addr?: string;
 
     /**
@@ -47,7 +47,7 @@ interface interConstructor {
 }
 
 let obj: interObject = {
-    id: "aa",
+    $id: "aa",
     name: "rtt",
     age: 30,
 }
