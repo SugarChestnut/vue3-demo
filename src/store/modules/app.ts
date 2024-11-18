@@ -16,7 +16,7 @@ export const appStore = defineStore({
         theme: Themes.Light,
     }),
     getters: {
-        title(): string {
+        getTitle(): string {
             return this.title;
         },
     },

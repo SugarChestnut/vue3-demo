@@ -14,31 +14,18 @@ declare module '*.vue' {
     export default component;
 }
 
-// Element UI
-declare module 'element-plus';
-
-// Vue 响应式拖放网格布局组件
-declare module 'vue-grid-layout' {
-    import Vue from 'vue';
-    // 扩展外部组件
-    export class GridLayout extends Vue {}
-
-    export class GridItem extends Vue {}
-
-    export interface GridItemData {
-        x: number;
-        y: number;
-        w: number;
-        h: number;
-        i: string;
-    }
-}
-
 /**
  * 为 JavaScript 引擎的原生对象添加属性和方法
  * 见 src/types/global.d.ts
  */
-declare global {}
+declare global {
+    namespace JSX {}
+    interface Window {
+        Promise: any;
+        moment: any;
+        axiosCancel: any;
+    }
+}
 
 /**
  * 定义 .env 文件配置的变量类型
@@ -51,6 +38,7 @@ interface ImportMetaEnv {
     readonly VITE_APP_BASE_API: string;
     readonly VITE_APP_BASE_URL: string;
     readonly VITE_APP_PORT: number;
+    readonly VITE_APP_SOCKET_URL: string;
 }
 
 interface ImportMeta {

@@ -10,10 +10,9 @@ const components: Indexable = {
 const componentName: string[] = Object.keys(components);
 
 export default {
-    install: (vue: App): void => {
-        vue.use(components['VueGridLayout']);
+    install: (app: App): void => {
         componentName.forEach((i) => {
-            vue.component(i, components[i]);
+            app.component(i, components[i]);
         });
     },
 };

@@ -4,6 +4,9 @@ import type { UserConfig, ConfigEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 import autoprefixer from 'autoprefixer';
+import AutoImport from 'unplugin-auto-import/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import Components from 'unplugin-vue-components/vite';
 
 /**
  * https://vite.dev/config/
@@ -25,8 +28,18 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         root: process.cwd(), // 项目根路径，默认就是根目录，不需要设置
         base: '/demo', // 公共 uri
         publicDir: process.cwd() + 'public', // 默认就是根目录下 public 文件夹
-        plugins: [vue() /*splitVendorChunkPlugin()*/],
-        envPrefix: "VITE_",     // 环境变量1以 VITE_ 开头，见 .env 文件
+        envPrefix: 'VITE_', // 环境变量以 VITE_ 开头，见 .env 文件
+        plugins: [
+            vue(),
+            AutoImport({
+                resolvers: [ElementPlusResolver()],
+                dts: path.resolve(__dirname, './src/types/auto-imports.d.ts'),
+            }),
+            Components({
+                resolvers: [ElementPlusResolver()],
+                dts: path.resolve(__dirname, './src/types/components.d.ts'),
+            }),
+        ],
         resolve: {
             extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
             /**
@@ -48,6 +61,8 @@ export default ({ mode }: ConfigEnv): UserConfig => {
             preprocessorOptions: {
                 //define global scss variable
                 scss: {
+                    api: 'modern-compiler',
+                    // 导出全局变量
                     additionalData: `@use "@/styles/theme.scss" as *;`,
                 },
             },
@@ -121,7 +136,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
                     drop_console: true,
                     drop_debugger: true,
                 },
-            }
+            },
         },
     });
 };

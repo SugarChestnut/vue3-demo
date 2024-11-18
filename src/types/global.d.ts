@@ -26,6 +26,8 @@ declare global {
     declare type Indexable<T = any> = {
         [key: string]: T;
     };
+
+    declare type CookieValue = object | string | number | boolean
 }
 
 // 还是需要导入的，因为有 import export
