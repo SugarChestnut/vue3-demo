@@ -48,19 +48,19 @@
 </template>
 
 <script lang="ts" setup>
-import { Client } from '@stomp/stompjs';
+import { Client, Message } from '@stomp/stompjs';
 import { onMounted, onUnmounted } from 'vue';
 import { ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
 const name = uuidv4().substring(6);
+console.log('name: ' + name);
 
 interface MessageType {
     timestamp?: number;
     sender?: string;
     message: string;
 }
-Client.
 
 const messages = ref<MessageType[]>([]);
 const topicMessage = ref('');
@@ -71,6 +71,9 @@ console.log('chat');
 
 const stompClient = new Client({
     brokerURL: 'ws://127.0.0.1:13148/ws',
+    heartbeatIncoming: 0,
+    heartbeatOutgoing: 20000,
+    reconnectDelay: 5000,
     connectHeaders: {},
     onConnect: () => {
         messages.value.push({
@@ -87,8 +90,8 @@ const stompClient = new Client({
             });
         });
 
-        // 定向消息
-        stompClient.subscribe('users/queue/msg', (res: any) => {
+        // 订阅自身的消息
+        stompClient.subscribe('/user/queue/' + name, (res: any) => {
             const messageData = JSON.parse(res.body) as MessageType;
             messages.value.push({
                 timestamp: new Date().getTime(),
@@ -156,7 +159,6 @@ function send() {
 </script>
 
 <style lang="scss" scoped>
-
 .message-container {
     display: flex;
     flex-direction: column;
