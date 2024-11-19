@@ -17,6 +17,7 @@
         "pinia": "^2.2.5",
         "sockjs": "^0.3.24",
         "sockjs-client": "^1.6.1",
+        "uuid": "^11.0.3",
         "vue": "^3.5.12",
         "vue-grid-layout": "^2.4.0",
         "vue-i18n": "^10.0.4",

@@ -1,7 +1,50 @@
 {
-    "files": [],
-    "references": [
-        { "path": "./tsconfig.app.json" },
-        { "path": "./tsconfig.node.json" }
-    ]
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        
+        /* Bundler mode */
+        "moduleResolution": "Bundler",
+        "allowImportingTsExtensions": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "noEmitOnError": false,
+        "noEmit": true,
+        "jsx": "preserve",
+
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
+        "noImplicitAny": false,
+        "strictNullChecks": true,  // undefiend 和 null 不能赋值给其他类型
+
+
+        /* 代码检查 */
+        "strict": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+
+        /* 模块兼容性 */
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+
+        /* 调试兼容性 */
+        "sourceMap": true,  // 代码地图
+        "useDefineForClassFields": true,
+        "allowJs": true,
+        
+        // 指定要查找的模块
+        "types": ["node", "vite/client", "element-plus/global"]
+    },
+    // 哪些文件需要编译
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "env.d.ts", "vite.config.ts"],
+    // 哪些文件不需要编译
+    "exclude": ["node_modules", "dist"]
 }

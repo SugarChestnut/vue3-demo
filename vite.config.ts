@@ -87,7 +87,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
                     target: env.VITE_APP_BASE_URL, // 访问路径 /xxx，转发到 target，同时改变访问源，放置跨域问题
                     changeOrigin: true,
                     ws: true,
-                    rewrite: (path): string => path.replace(new RegExp('^' + '/xxx'), ''), // 对 uri 进行匹配替换
+                    rewrite: (path): string => path.replace(new RegExp('^' + 'env.VITE_APP_BASE_API'), ''), // 对 uri 进行匹配替换
                 },
             },
         },
