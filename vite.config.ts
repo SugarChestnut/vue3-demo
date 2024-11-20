@@ -33,12 +33,12 @@ export default ({ mode }: ConfigEnv): UserConfig => {
             vue(),
             AutoImport({
                 resolvers: [ElementPlusResolver()],
-                dts: path.resolve(__dirname, './src/types/auto-imports.d.ts'),
+                dts: path.resolve(__dirname, './src/types/auto-imports.d.ts')
             }),
             Components({
                 resolvers: [ElementPlusResolver()],
-                dts: path.resolve(__dirname, './src/types/components.d.ts'),
-            }),
+                dts: path.resolve(__dirname, './src/types/components.d.ts')
+            })
         ],
         resolve: {
             extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
@@ -48,33 +48,33 @@ export default ({ mode }: ConfigEnv): UserConfig => {
              */
             alias: {
                 '@': path.resolve(__dirname, './src'),
-                'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
+                'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
             },
-            preserveSymlinks: true,
+            preserveSymlinks: true
         },
         // css 预处理配置
         css: {
             modules: {
                 // 自定义csss属性名：name 表示文件名，local 表示类名
-                generateScopedName: '[name]_[local]_[hash:base64:5]',
+                generateScopedName: '[name]_[local]_[hash:base64:5]'
             },
             preprocessorOptions: {
                 //define global scss variable
                 scss: {
                     api: 'modern-compiler',
                     // 导出全局变量
-                    additionalData: `@use "@/styles/theme.scss" as *;`,
-                },
+                    additionalData: `@use "@/styles/theme.scss" as *;`
+                }
             },
             postcss: {
                 plugins: [
                     // 这个插件主要用来自动为不同的目标浏览器添加样式前缀，解决的是浏览器兼容性的问题。
                     autoprefixer({
                         // 指定目标浏览器
-                        overrideBrowserslist: ['Chrome > 40', 'ff > 31', 'ie 11'],
-                    }),
-                ],
-            },
+                        overrideBrowserslist: ['Chrome > 40', 'ff > 31', 'ie 11']
+                    })
+                ]
+            }
         },
         // 服务配置
         server: {
@@ -87,9 +87,9 @@ export default ({ mode }: ConfigEnv): UserConfig => {
                     target: env.VITE_APP_BASE_URL, // 访问路径 /xxx，转发到 target，同时改变访问源，放置跨域问题
                     changeOrigin: true,
                     ws: true,
-                    rewrite: (path): string => path.replace(new RegExp('^' + 'env.VITE_APP_BASE_API'), ''), // 对 uri 进行匹配替换
-                },
-            },
+                    rewrite: (path): string => path.replace(new RegExp('^' + 'env.VITE_APP_BASE_API'), '') // 对 uri 进行匹配替换
+                }
+            }
         },
         // 编译
         build: {
@@ -125,18 +125,18 @@ export default ({ mode }: ConfigEnv): UserConfig => {
                             if (id.includes('node_modules')) {
                                 return id.split('node_modules/')[1].split('/')[1];
                             }
-                        },
-                    },
-                ],
+                        }
+                    }
+                ]
             },
             // 压缩插件
             minify: 'terser',
             terserOptions: {
                 compress: {
                     drop_console: true,
-                    drop_debugger: true,
-                },
-            },
-        },
+                    drop_debugger: true
+                }
+            }
+        }
     });
 };

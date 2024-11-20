@@ -3,9 +3,10 @@
         "target": "ESNext",
         "module": "ESNext",
         "lib": ["ESNext", "DOM", "DOM.Iterable"],
-        "baseUrl": ".",
+        "baseUrl": "./",
+        "rootDir": ".",
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["src/*"]
         },
         
         /* Bundler mode */
@@ -18,12 +19,14 @@
         "jsx": "preserve",
 
         "noUnusedLocals": true,
+        "strictNullChecks": true,  // undefined 和 null 不能赋值给其他类型
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "removeComments": false,
+
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
-        "noImplicitAny": false,
-        "strictNullChecks": true,  // undefiend 和 null 不能赋值给其他类型
-
 
         /* 代码检查 */
         "strict": true,
