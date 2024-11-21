@@ -1,48 +1,39 @@
 <template>
     <div class="app-container">
-        <el-row :gutter="10">
-            <el-col :span="12">
-                <el-card class="mt-5">
-                    <el-form label-width="90px">
-                        <el-form-item label="消息内容">
-                            <el-input v-model="message" type="textarea" />
-                        </el-form-item>
-                        <el-form-item label="消息接收人">
-                            <el-input v-model="receiver" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="send">发送消息</el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-card>
-            </el-col>
-            <!-- 消息接收显示部分 -->
-            <el-col :span="12">
-                <el-card>
-                    <div class="message-container">
+        <el-card>
+            <el-scrollbar height="400px" class="message-container">
+                <div
+                    v-for="(message, index) in messages"
+                    :key="index"
+                    class="message-content"
+                >
+                    <div class="message-content">
                         <div
-                            v-for="(message, index) in messages"
-                            :key="index"
                             :class="{
-                                'message--sent': message.sender === name,
-                                'message--received': message.sender !== name
+                                'message-sender': message.sender === name,
+                                'message-receiver': message.sender !== name
                             }"
                         >
-                            <div class="message-content">
-                                <div
-                                    :class="{
-                                        'message-sender': message.sender === name,
-                                        'message-receiver': message.sender !== name
-                                    }"
-                                >
-                                    {{ message.sender }}: {{ message.message }}
-                                </div>
-                            </div>
+                            {{ message.sender }}: {{ message.message }}
                         </div>
                     </div>
-                </el-card>
-            </el-col>
-        </el-row>
+                </div>
+            </el-scrollbar>
+
+            <div class="message-send">
+                <el-form label-width="90px">
+                    <el-form-item label="消息内容">
+                        <el-input v-model="message" type="textarea" />
+                    </el-form-item>
+                    <el-form-item label="消息接收人">
+                        <el-input v-model="receiver" />
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="send">发送消息</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-card>
     </div>
 </template>
 
@@ -80,10 +71,10 @@ const stompClient = new Client({
     },
     onConnect: () => {
         // 获取一次服务器数据
-        stompClient.subscribe('/app/communicate', (res: any) => {
+        stompClient.subscribe('/app/source', (res: any) => {
             console.log(res.body);
         });
-        
+
         messages.value.push({
             timestamp: new Date().getTime(),
             sender: 'Server',
@@ -102,9 +93,9 @@ const stompClient = new Client({
             }
         });
 
-        // 订阅自身的消息
-        stompClient.subscribe('/user/queue/shouts', (res: any) => {
-            console.log("self");
+        // 订阅自身的消息，user 对应 userDestinationPrefix，queue (@SendToUser)对应 brokerPrefix
+        stompClient.subscribe(`/user/${name}/message`, (res: any) => {
+            console.log('self');
             const messageData = JSON.parse(res.body) as MessageType;
             messages.value.push({
                 timestamp: messageData.timestamp,
@@ -155,7 +146,8 @@ function send() {
             console.log('广播消息: ' + message.value);
             // 广播消息
             stompClient.publish({
-                destination: '/topic/notice',
+                // '/topic/notice'
+                destination: '/app/sendToAll',
                 body: msgStr
             });
             messages.value.push({
@@ -180,51 +172,38 @@ function send() {
 </script>
 
 <style lang="scss" scoped>
+
 .message-container {
     display: flex;
     flex-direction: column;
-}
-
-.message {
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-}
-
-.message--sent {
-    align-self: flex-end;
-    background-color: #dcf8c6;
-}
-
-.message--received {
-    align-self: flex-start;
-    background-color: #e8e8e8;
+    background-color: rgb(243, 243, 243);
+    padding: 30px 20px 10px 20px ;
 }
 
 .message-content {
+    margin-top: 5px;
     display: flex;
     flex-direction: column;
+    // opacity: 0;
 }
 
 .message-sender {
-    margin-bottom: 5px;
     font-weight: bold;
     text-align: right;
+    background-color: rgb(167, 234, 120);
+    border-radius: 5px;
+    width: fit-content;
+    padding: 5px 10px 5px 10px;
+    align-self: flex-end;
 }
 
 .message-receiver {
-    margin-bottom: 5px;
     font-weight: bold;
     text-align: left;
-}
-
-.tip-message {
-    align-self: center;
-    padding: 5px 10px;
-    margin-bottom: 5px;
-    font-style: italic;
-    text-align: center;
-    background-color: #f0f0f0;
-    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 2px;
+    width: fit-content;
+    padding: 5px 10px 5px 10px;
+    align-self: flex-start;
 }
 </style>

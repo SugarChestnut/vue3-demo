@@ -14,6 +14,8 @@ declare module '*.vue' {
     export default component;
 }
 
+declare module '*.mjs';
+
 /**
  * 为 JavaScript 引擎的原生对象添加属性和方法
  * 见 src/types/global.d.ts
