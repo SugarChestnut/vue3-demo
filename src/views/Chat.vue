@@ -2,11 +2,7 @@
     <div class="app-container">
         <el-card>
             <el-scrollbar height="400px" class="message-container">
-                <div
-                    v-for="(message, index) in messages"
-                    :key="index"
-                    class="message-content"
-                >
+                <div v-for="(message, index) in messages" :key="index" class="message-content">
                     <div class="message-content">
                         <div
                             :class="{
@@ -69,7 +65,9 @@ const stompClient = new Client({
     debug: (str) => {
         console.log(str);
     },
-    onConnect: () => {
+    onConnect: (frame) => {
+        console.log(frame);
+
         // 获取一次服务器数据
         stompClient.subscribe('/app/source', (res: any) => {
             console.log(res.body);
@@ -94,7 +92,9 @@ const stompClient = new Client({
         });
 
         // 订阅自身的消息，user 对应 userDestinationPrefix，queue (@SendToUser)对应 brokerPrefix
-        stompClient.subscribe(`/user/${name}/message`, (res: any) => {
+        // let target: string = `/user/${name}/message`;
+        let target: string = `/user/${name}/user1/private`;
+        stompClient.subscribe(target, (res: any) => {
             console.log('self');
             const messageData = JSON.parse(res.body) as MessageType;
             messages.value.push({
@@ -172,12 +172,11 @@ function send() {
 </script>
 
 <style lang="scss" scoped>
-
 .message-container {
     display: flex;
     flex-direction: column;
     background-color: rgb(243, 243, 243);
-    padding: 30px 20px 10px 20px ;
+    padding: 30px 20px 10px 20px;
 }
 
 .message-content {
