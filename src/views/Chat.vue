@@ -69,9 +69,9 @@ const stompClient = new Client({
         console.log(frame);
 
         // 获取一次服务器数据
-        stompClient.subscribe('/app/source', (res: any) => {
-            console.log(res.body);
-        });
+        // stompClient.subscribe('/app/source', (res: any) => {
+        //     console.log(res.body);
+        // });
 
         messages.value.push({
             timestamp: new Date().getTime(),
@@ -80,20 +80,20 @@ const stompClient = new Client({
         });
 
         // 订阅广播消息
-        stompClient.subscribe('/topic/notice', (res: any) => {
-            const messageData = JSON.parse(res.body) as MessageType;
-            if (messageData.sender !== name) {
-                messages.value.push({
-                    timestamp: messageData.timestamp,
-                    sender: messageData.sender,
-                    message: messageData.message
-                });
-            }
-        });
+        // stompClient.subscribe('/topic/notice', (res: any) => {
+        //     const messageData = JSON.parse(res.body) as MessageType;
+        //     if (messageData.sender !== name) {
+        //         messages.value.push({
+        //             timestamp: messageData.timestamp,
+        //             sender: messageData.sender,
+        //             message: messageData.message
+        //         });
+        //     }
+        // });
 
         // 订阅自身的消息，user 对应 userDestinationPrefix，queue (@SendToUser)对应 brokerPrefix
         // let target: string = `/user/${name}/message`;
-        let target: string = `/user/${name}/user1/private`;
+        let target: string = `/user/queue/private`;
         stompClient.subscribe(target, (res: any) => {
             console.log('self');
             const messageData = JSON.parse(res.body) as MessageType;
