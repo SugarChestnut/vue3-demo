@@ -6,9 +6,15 @@ import { routesChat } from './chat';
 import { routesLogin } from './login';
 import { getCookie } from '@/utils/cookies';
 import { ElMessage } from 'element-plus';
+import WeChat from '@/views/WeChat.vue';
 
 // 路由配置
 const routes: RouteRecordRaw[] = [
+    {
+        path: '/wechat',
+        name: 'WeChat',
+        component: WeChat,
+    },
     ...routesNotFound,
     ...routesHome,
     ...routesChat,
