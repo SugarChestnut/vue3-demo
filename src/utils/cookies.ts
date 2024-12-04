@@ -1,19 +1,17 @@
 const cookie = {
-    prefix: 'demo', //cookie前缀
     expire: 7 * 24 * 60 * 60, //7天的有效时间
-    auto_start: true, //是否开启cookie
+    auto_start: true //是否开启cookie
 };
 
-const setCookie = function (key: string, value: CookieValue, expires = 0, prefix?: string): void {
+const setCookie = function (key: string, value: CookieValue, expires = 0): void {
     if (!cookie.auto_start) return;
     if (typeof value === 'object') {
         value = JSON.stringify(value);
     }
     expires = expires ? expires : cookie.expire;
-    prefix = prefix ?? cookie.prefix + '_';
     const expDate = new Date();
     expDate.setTime(expDate.getTime() + expires * 1000);
-    document.cookie = prefix + key + '=' + encodeURIComponent(value) + ';path=/;expires=' + expDate.toUTCString();
+    document.cookie = key + '=' + encodeURIComponent(value) + ';path=/;expires=' + expDate.toUTCString();
 };
 
 /**
@@ -22,9 +20,9 @@ const setCookie = function (key: string, value: CookieValue, expires = 0, prefix
  * @param expires - 过期时间(时)
  * @param prefix - 前缀
  */
-const setAllCookie = function (values: { [propName: string]: CookieValue }, expires?: number, prefix?: string) {
+const setAllCookie = function (values: { [propName: string]: CookieValue }, expires?: number) {
     for (const [key, value] of Object.entries(values)) {
-        setCookie(key, value, expires, prefix);
+        setCookie(key, value, expires);
     }
 };
 
@@ -35,7 +33,7 @@ const getCookie = function (key: string, type = 'string'): any {
     const arr = document.cookie.split('; ') || [];
     for (const value of arr) {
         const _arr = value.split('=');
-        if (_arr[0] === cookie.prefix + '_' + key) {
+        if (_arr[0] === key) {
             if (type === 'object') {
                 return JSON.parse(decodeURIComponent(_arr[1]));
             }
@@ -48,7 +46,7 @@ const getCookie = function (key: string, type = 'string'): any {
  * @description 删除cookie
  */
 const delCookie = function (key: string) {
-    setCookie(key, '', -1, '');
+    setCookie(key, '', -1);
 };
 
 /**
@@ -62,11 +60,7 @@ const clearAllCookie = function () {
      * || []    没有匹配到的时候，match 返回 null，这时候返回 []
      */
     const keys = document.cookie.match(/[^ =;]+(?==)/g) || [];
-    keys.forEach((key) => {
-        if (key.includes(`${cookie.prefix}_`)) {
-            setCookie(key, '', -1, '');
-        }
-    });
+    keys.forEach((key) => setCookie(key, '', -1));
 };
 
 export { setCookie, setAllCookie, getCookie, delCookie, clearAllCookie };
