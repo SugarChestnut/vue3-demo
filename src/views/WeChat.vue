@@ -4,12 +4,10 @@
             <!-- 左侧联系人面板 -->
             <div class="contact-panel unselectable-text" :style="{ width: leftWidth + 'px' }">
                 <div class="contact-header">
-                    <el-input v-model="searchText" placeholder="搜索" prefix-icon="Search" clearable />
-                    <div class="add-contact">
-                        <el-button circle :icon="Plus" size="small" title="1"/>
-                    </div>
+                    <el-input v-model="searchText" placeholder="搜索" prefix-icon="Search" clearable size="small" />
+                    <el-button :icon="Plus" title="1" size="small" />
                 </div>
-                <div class="contact-list">
+                <div class="contact-list custom-scrollbar">
                     <div
                         v-for="contact in contacts"
                         :key="contact.id"
@@ -17,7 +15,7 @@
                         :class="{ active: currentContact?.id === contact.id }"
                         @click="selectContact(contact)"
                     >
-                        <el-avatar :size="40" :src="contact.avatar" />
+                        <el-avatar :size="40" :src="contact.avatar" shape="square" />
                         <div class="contact-info">
                             <div class="contact-name">{{ contact.name }}</div>
                             <div class="contact-preview">{{ contact.lastMessage }}</div>
@@ -37,16 +35,15 @@
                 </div>
 
                 <!-- 聊天记录区域 -->
-                <div class="chat-messages" ref="messageContainer" @scroll="handleScroll">
+                <div class="chat-messages custom-scrollbar" ref="messageContainer" @scroll="handleScroll">
                     <div v-if="loading" class="loading-more">
                         <el-icon class="loading"><Loading /></el-icon>
-                        加载更多...
                     </div>
                     <div v-for="msg in messages" :key="msg.id" class="message-item" :class="msg.type">
-                        <el-avatar :size="36" :src="msg.avatar" />
+                        <el-avatar :size="36" :src="msg.avatar" shape="square" />
+                        <div class="triangle" />
                         <div class="message-content">
                             <div class="message-text">{{ msg.content }}</div>
-                            <div class="message-time">{{ msg.time }}</div>
                         </div>
                     </div>
                 </div>
@@ -79,7 +76,7 @@ import { ElMessage } from 'element-plus';
 import { Plus, Search } from '@element-plus/icons-vue';
 
 // 状态变量
-const leftWidth = ref(300);
+const leftWidth = ref(275);
 const inputHeight = ref(150);
 const searchText = ref('');
 const inputMessage = ref('');
@@ -93,7 +90,7 @@ const contacts = ref(
     Array.from({ length: 20 }, (_, i) => ({
         id: i + 1,
         name: `联系人 ${i + 1}`,
-        avatar: `https://placekitten.com/40/40?image=${i}`,
+        avatar: 'https://avatars.githubusercontent.com/u/2?v=4',
         lastMessage: `这是最后一条消息 ${i + 1}`
     }))
 );
@@ -109,7 +106,6 @@ const generateMessages = (count = 20) => {
             id: Date.now() + i,
             type: Math.random() > 0.5 ? 'sent' : 'received',
             content: `这是第 ${i + 1} 条消息内容`,
-            time: new Date().toLocaleTimeString(),
             avatar: Math.random() > 0.5 ? 'https://placekitten.com/36/36?image=1' : currentContact.value?.avatar
         });
     }
@@ -213,11 +209,11 @@ onMounted(() => {
     height: 720px;
     display: flex;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 4px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
 }
 
+// 左边
 .contact-panel {
     min-width: 200px;
     max-width: 500px;
@@ -226,57 +222,47 @@ onMounted(() => {
     flex-direction: column;
 }
 
+// 搜索联系人
 .contact-header {
-    padding: 16px;
+    padding: 25px 12px 12px 12px;
     display: flex;
-    gap: 10px;
+    gap: 10px; // 子元素间隙，配合 flex
     border-bottom: 1px solid #eee;
+    :deep(.el-input__wrapper) {
+        background-color: #f5f5f5;
+    }
+    :deep(.el-button--small) {
+        padding: 5px;
+        background-color: #f5f5f5;
+    }
 }
 
+// 添加联系人
 .add-contact {
-    position: relative;
-    display: inline-flex;
-    vertical-align: middle;
-    box-sizing: border-box;
-    line-height: var(--el-input-height);
-}
-
-.add-contact button {
-    vertical-align: middle;
+    padding-top: 4px;
 }
 
 .contact-list {
     flex: 1;
     overflow-y: auto;
-    scrollbar-width: thin;
-}
-
-.contact-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.contact-list::-webkit-scrollbar-thumb {
-    background-color: transparent;
-}
-
-.contact-list:hover::-webkit-scrollbar-thumb {
-    background-color: #ddd;
-    border-radius: 3px;
-}
-
-.contact-item {
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.contact-item:hover {
     background-color: #f5f5f5;
 }
 
+/* 联系人条目 */
+.contact-item {
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.3s;
+}
+
+.contact-item:hover {
+    background-color: #e8e8e8;
+}
+
 .contact-item.active {
-    background-color: #e6f3ff;
+    background-color: #e0e0e0;
 }
 
 .contact-info {
@@ -285,12 +271,13 @@ onMounted(() => {
 }
 
 .contact-name {
-    font-weight: 500;
+    font-weight: bold;
+    font-size: 14px;
     margin-bottom: 4px;
 }
 
 .contact-preview {
-    font-size: 12px;
+    font-size: 11px;
     color: #999;
     white-space: nowrap;
     overflow: hidden;
@@ -321,7 +308,7 @@ onMounted(() => {
 }
 
 .chat-header {
-    padding: 21px;
+    padding: 20px;
     border-bottom: 1px solid #eee;
     font-weight: 500;
 }
@@ -330,20 +317,6 @@ onMounted(() => {
     flex: 1;
     padding: 16px;
     overflow-y: auto;
-    scrollbar-width: thin;
-}
-
-.chat-messages::-webkit-scrollbar {
-    width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
-    background-color: transparent;
-}
-
-.chat-messages:hover::-webkit-scrollbar-thumb {
-    background-color: #ddd;
-    border-radius: 3px;
 }
 
 .loading-more {
@@ -367,7 +340,7 @@ onMounted(() => {
 
 .message-item {
     display: flex;
-    gap: 12px;
+    // gap: 12px;
     margin-bottom: 16px;
 }
 
@@ -379,14 +352,32 @@ onMounted(() => {
     flex-direction: row-reverse;
 }
 
+.received .triangle {
+    margin-top: 12px;
+    width: 0;
+    height: 0;
+    border: 6px;
+    border-style: solid;
+    border-color: transparent #f4f4f4 transparent transparent;
+}
+
+.sent .triangle {
+    margin-top: 12px;
+    width: 0;
+    height: 0;
+    border: 6px;
+    border-style: solid;
+    border-color: transparent transparent transparent #95ec69;
+}
+
 .message-content {
     max-width: 60%;
 }
 
 .message-text {
+    font-size: 14px;
     padding: 10px 16px;
     border-radius: 4px;
-    word-break: break-word;
 }
 
 .received .message-text {
@@ -395,13 +386,6 @@ onMounted(() => {
 
 .sent .message-text {
     background-color: #95ec69;
-}
-
-.message-time {
-    font-size: 12px;
-    color: #999;
-    margin-top: 4px;
-    text-align: right;
 }
 
 .chat-input {
@@ -416,12 +400,12 @@ onMounted(() => {
     align-self: flex-end;
 }
 
-.none-border{
+.none-border {
     // 样式穿透，在父组件中改变深层次子组件的样式
     :deep(.el-textarea__inner) {
         box-shadow: 0 0 0 0px var(--el-input-border-color, var(--bel-border-color)) inset;
     }
-} 
+}
 
 /* 文字无法选中 */
 .unselectable-text {
@@ -429,5 +413,42 @@ onMounted(() => {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard syntax */
+}
+
+/* 滚动条样式 */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.custom-scrollbar:hover {
+    scrollbar-color: #c1c1c1 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 3px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+    display: none;
+    background-color: #95ec69;
+    width: 0px;
 }
 </style>
